@@ -5,8 +5,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// config view engine
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+
 app.get('/', (req, res) => {
-    res.send('Hello World and vc');
+    res.render('home.ejs');
 });
 
 app.get('/hoidanit', (req, res) => {
