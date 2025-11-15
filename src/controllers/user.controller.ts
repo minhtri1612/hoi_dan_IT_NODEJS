@@ -8,6 +8,11 @@ const getUserPage = (req: Request, res: Response) => {
     return res.render('create-user');
 };
 
+const postUserPage = (req: Request, res: Response) => {
+    return res.redirect('/');
+};
 
 
-export { getHomePage, getUserPage };
+
+
+export { getHomePage, getUserPage, postUserPage };
