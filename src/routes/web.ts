@@ -1,5 +1,4 @@
 import express, { Express } from 'express';
-import { get } from 'http';
 import { getHomePage, getUserPage, postUserPage } from '../controllers/user.controller';
 const router = express.Router();
 
