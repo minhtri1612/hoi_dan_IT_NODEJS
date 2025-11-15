@@ -14,6 +14,10 @@ app.set('views', __dirname + '/views');
 // config routes
 webRoutes(app);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port:`,process.env.PORT);
+// config static files
+app.use(express.static('public'));
+
+// start server
+app.listen(PORT, () => {
+    console.log(`Server is running on port:`, { PORT });
 });
