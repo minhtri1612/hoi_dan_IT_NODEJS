@@ -13,6 +13,10 @@ app.get('/hoidanit', (req, res) => {
     res.send('Hello Minh Tri!');
 });
 
+app.get('/abc', (req, res) => {
+    res.send('ABC')
+});  
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port:`,process.env.PORT);
 });
