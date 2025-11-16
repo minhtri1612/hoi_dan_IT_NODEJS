@@ -8,7 +8,7 @@ const getHomePage = async (req: Request, res: Response) => {
     console.log("check users:",users);
 
     return res.render("home",{
-        name: "users"
+        users: users
     });
 };
 
