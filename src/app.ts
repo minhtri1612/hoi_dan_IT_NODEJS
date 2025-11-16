@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import 'dotenv/config';
 import webRoutes from './routes/web';
+import getConnection from './config/database';
 dotenv.config();
 
 const app = express();
@@ -20,6 +21,8 @@ app.use(express.static('public'));
 
 // config routes
 webRoutes(app);
+
+getConnection();
 
 // start server
 app.listen(PORT, () => {
