@@ -1,54 +1,39 @@
 import getConnection from 'config/database';
-import { prisma } from 'config/client';
 
 const handleCreateUser = async(
-    fullName: string,
-    email: string,
+    fullName: string, 
+    email: string, 
     address: string) => {
-    // Try to create with Prisma first. If Prisma fails (schema/migration issues),
-    // fallback to raw SQL using the existing mysql2 connection so the app can still create users.
-    try {
-        const newUser = await prisma.user.create({
-            data: {
-                name: fullName,
-                email: email,
-                address: address
-            }
-        });
-        return newUser;
-    } catch (prismaError) {
-        console.log('Prisma create failed, falling back to raw SQL. Error:', prismaError);
-        // fallback: use mysql2 connection
+
+    //insert into database
+    const connection = await getConnection();
+
         try {
-            const connection = await getConnection();
             const sql = 'INSERT INTO users (name, email, address) VALUES (?, ?, ?)';
             const values = [fullName, email, address];
-            const [result] = await connection.query(sql, values);
-            // result may contain insertId depending on driver
-            // fetch inserted row if possible
-            // @ts-ignore
-            const insertId = result?.insertId;
-            if (insertId) {
-                const [rows] = await connection.query('SELECT * FROM users WHERE id = ?', [insertId]);
-                return Array.isArray(rows) ? rows[0] : rows;
-            }
+
+            const [result, fields] = await connection.query(sql, values);
             return result;
-        } catch (sqlErr) {
-            console.log('Fallback SQL create also failed:', sqlErr);
-            throw sqlErr;
-        }
+    } catch (error) {
+        console.log(">>> Error:", error);
+        return [];
     }
 };
 
 const getAllUser = async() => {
+    const connection = await getConnection();
+
+
     try {
-        // Use Prisma to fetch users (avoid raw SQL table name mismatches)
-        const users = await prisma.user.findMany();
-        return users;
+        const [result, fields] = await connection.query(
+            'SELECT * FROM users'
+        );
+        return result;
     } catch (error) {
-        console.log('>>> Error:', error);
+        console.log(">>> Error:", error);
         return [];
     }
+
 };
 
 const handleDeleteUser = async(id: string) => {
