@@ -27,7 +27,7 @@ const postDeleteUser = async (req: Request, res: Response) => {
 
     const id = req.params.id;
 
-    await handleDeleteUser(id);
+    const a = await handleDeleteUser(id);
     return res.redirect('/');
 };
 
