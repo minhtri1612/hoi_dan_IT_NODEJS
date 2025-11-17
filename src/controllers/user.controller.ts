@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import { getAllUser, handleCreateUser, handleDeleteUser } from '../services/user.service';
-import { get } from 'http';
+import { getAllUser, handleCreateUser, handleDeleteUser, getUserById, updateUserById } from '../services/user.service';
     
 const getHomePage = async (req: Request, res: Response) => {
     // get users
@@ -32,4 +31,38 @@ const postDeleteUser = async (req: Request, res: Response) => {
     return res.redirect('/');
 };
 
-export { getHomePage, getUserPage, postUserPage, postDeleteUser };
+const getViewUser = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    // get user by id (service may return rows array)
+    const result = await getUserById(id);
+
+    // normalize to a single user object
+    let userObj: any = result;
+    if (Array.isArray(result)) {
+        // some database drivers return [rows], or query may return rows array
+        // if result is an array of rows, pick the first row
+        userObj = result[0];
+        // if the driver returns [rows, fields] structure, check for nested array
+        if (Array.isArray(userObj) && userObj.length) {
+            userObj = userObj[0];
+        }
+    }
+
+    // pass the user object to the view so template can access user.name, user.email, etc.
+    return res.render('view-user', {
+        id: id,
+        user: userObj,
+    });
+};
+
+const postUpdateUser = async (req: Request, res: Response) => {
+    const { id, email, address, fullName } = req.body;
+    //get user by id
+    const a = await updateUserById(id, email, address, fullName );
+
+    return res.redirect('/');
+};
+
+export { getHomePage, getUserPage, postUserPage, postDeleteUser, getViewUser,
+    postUpdateUser
+ };

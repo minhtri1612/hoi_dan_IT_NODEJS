@@ -51,4 +51,36 @@ const handleDeleteUser = async(id: string) => {
     }
 };
 
-export { handleCreateUser, getAllUser, handleDeleteUser };
+const getUserById = async(id: string) => {
+    const connection = await getConnection();
+
+    try {
+        const sql = 'SELECT * FROM users WHERE id = ? LIMIT 1';
+        const values = [id];
+
+        const [result, fields] = await connection.execute(sql, values);
+        return result;
+    } catch (error) {
+        console.log(">>> Error:", error);
+        return [];
+    }
+};
+
+const updateUserById = async(id: string, 
+    email: string, address: string, fullName: string
+) => {
+    try {
+        const connection = await getConnection();
+        const sql = 'UPDATE users SET name = ?, email = ?, address = ? WHERE id = ? LIMIT 1';
+        const values = [fullName, email, address, id];
+
+        const [result, fields] = await connection.execute(sql, values);
+        return result;
+    } catch (error) {
+        console.log(">>> Error:", error);
+        return [];
+    }
+};
+
+
+export { handleCreateUser, getAllUser, handleDeleteUser, getUserById, updateUserById };

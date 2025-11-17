@@ -25,7 +25,8 @@
     <div> 
         <table class="table table-hover table-bordered">
             <thread>
-                <th>Id</th>
+                <!-- ID column intentionally hidden to avoid showing internal ids to users -->
+                <th style="display:none;">Id</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Address</th>
@@ -34,18 +35,15 @@
             <tbody>
                 <% users.forEach(function (user) { %>
                 <tr>
-                    <td><%= user.id %></td>
+                    <td style="display:none;"><%= user.id %></td>
                     <td><%= user.name %></td>
                     <td><%= user.email %></td>
                     <td><%= user.address %></td>
 
                     <td>
-                        <div style="display: flex; gap: 10px;">
-                            <form action="/handle-view-user/<%= user.id %>" method="POST";">
-                                <button 
-                                type="submit"
-                                class="btn btn-warning">View  </button>
-                            </form> 
+                        <div style="display: flex; gap: 10px; align-items:center;">
+                            <!-- use a simple link for GET view (cleaner HTML) -->
+                            <a href="/handle-view-user/<%= user.id %>" class="btn btn-warning">View</a>
                             <form action="/handle-delete-user/<%= user.id %>" method="POST" onsubmit="return confirm('Are you sure to delete this user?');">
                                 <button 
                                 type="submit"
