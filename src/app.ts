@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import 'dotenv/config';
 import webRoutes from './routes/web';
 import getConnection from './config/database';
+import initDatabase from 'config/seed';
 dotenv.config();
 
 const app = express();
@@ -23,6 +24,9 @@ app.use(express.static('public'));
 webRoutes(app);
 
 getConnection();
+
+//seeding data
+initDatabase();
 
 // start server
 app.listen(PORT, () => {
