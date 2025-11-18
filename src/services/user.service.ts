@@ -53,6 +53,17 @@ const getAllUser = async() => {
     }
 };
 
+const getAllRoles = async() => {
+    try {
+        // Use Prisma to fetch users (avoid raw SQL table name mismatches)
+        const users = await prisma.role.findMany();
+        return users;
+    } catch (error) {
+        console.log('>>> Error:', error);
+        return [];
+    }
+};
+
 const handleDeleteUser = async(id: string) => {
     const result = await prisma.user.delete({
         where: { id: parseInt(id) }
@@ -84,4 +95,4 @@ const updateUserById = async(id: string,
 };
 
 
-export { handleCreateUser, getAllUser, handleDeleteUser, getUserById, updateUserById };
+export { handleCreateUser, getAllUser, handleDeleteUser, getUserById, updateUserById, getAllRoles };
