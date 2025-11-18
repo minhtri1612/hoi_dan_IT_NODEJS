@@ -12,7 +12,7 @@ const getHomePage = async (req: Request, res: Response) => {
 };
 
 const getUserPage = (req: Request, res: Response) => {
-    return res.render('create-user');
+    return res.render('admin/user/create.ejs');
 };
 
 const postUserPage = async (req: Request, res: Response) => {
