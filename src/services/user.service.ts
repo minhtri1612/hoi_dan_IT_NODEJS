@@ -1,10 +1,13 @@
 import getConnection from 'config/database';
 import { prisma } from 'config/client';
-
+import { ACCOUNT_TYPE } from 'config/constant';
 const handleCreateUser = async(
     fullName: string,
     email: string,
-    address: string) => {
+    address: string,
+    phone: string,
+    avatar: string
+) => {
     // Try to create with Prisma first. If Prisma fails (schema/migration issues),
     // fallback to raw SQL using the existing mysql2 connection so the app can still create users.
     try {
@@ -13,8 +16,10 @@ const handleCreateUser = async(
                 fullName: fullName,
                 username: email,
                 address: address,
-                password: "",
-                accountType:""
+                password: "Minhchau3112...",
+                accountType: ACCOUNT_TYPE.SYSTEM,
+                avatar: "",
+                phone: ""
             }
         });
         return newUser;
