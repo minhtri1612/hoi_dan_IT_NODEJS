@@ -1,28 +1,31 @@
 import { prisma } from 'config/client';
+import { hashPassword } from 'services/user.service';
+import { ACCOUNT_TYPE } from 'config/constant';
 
 const initDatabase = async () => {
     const countUser = await prisma.user.count();
     const countRole = await prisma.role.count();
 
     if (countUser === 0) {
+        const defaultPassword = await hashPassword('Minhchau3112...');
         await prisma.user.createMany({
             data: [
                 {
                     username: 'hoidanit',
-                    password: 'password123',
+                    password: defaultPassword,
                     fullName: 'Hỏi Đáp IT',
                     address: '123 Tech Street',
                     phone: '123-456-7890',
-                    accountType: 'admin',
+                    accountType: ACCOUNT_TYPE.SYSTEM,
                     avatar: null,
                 },
                 {
                     username: 'janedoe',
-                    password: 'password456',
+                    password: defaultPassword,
                     fullName: 'Jane Doe',
                     address: '456 Main Street',
                     phone: '987-654-3210',
-                    accountType: 'user',
+                    accountType: ACCOUNT_TYPE.SYSTEM,
                     avatar: null,
                 },
             ],

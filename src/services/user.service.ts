@@ -1,6 +1,13 @@
 import getConnection from 'config/database';
 import { prisma } from 'config/client';
 import { ACCOUNT_TYPE } from 'config/constant';
+import bscrypt from 'bcrypt';
+const saltRounds= 10; 
+
+const hashPassword = async(password: string) => {
+    const hashedPassword = await bscrypt.hash(password, saltRounds);
+    return hashedPassword;
+};
 const handleCreateUser = async(
     fullName: string,
     email: string,
@@ -8,15 +15,14 @@ const handleCreateUser = async(
     phone: string,
     avatar: string
 ) => {
-    // Try to create with Prisma first. If Prisma fails (schema/migration issues),
-    // fallback to raw SQL using the existing mysql2 connection so the app can still create users.
+    const defaultPassword = await  hashPassword("Minhchau3112...");
     try {
         const newUser = await prisma.user.create({
             data: {
                 fullName: fullName,
                 username: email,
                 address: address,
-                password: "Minhchau3112...",
+                password: defaultPassword,
                 accountType: ACCOUNT_TYPE.SYSTEM,
                 avatar: "",
                 phone: ""
@@ -100,4 +106,4 @@ const updateUserById = async(id: string,
 };
 
 
-export { handleCreateUser, getAllUser, handleDeleteUser, getUserById, updateUserById, getAllRoles };
+export { handleCreateUser, getAllUser, handleDeleteUser, getUserById, updateUserById, getAllRoles, hashPassword};
