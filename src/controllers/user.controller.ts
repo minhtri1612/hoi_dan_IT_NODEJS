@@ -38,8 +38,8 @@ const postDeleteUser = async (req: Request, res: Response) => {
 
     const id = req.params.id;
 
-    const a = await handleDeleteUser(id);
-    return res.redirect('/');
+    await handleDeleteUser(id);
+    return res.redirect('/admin/user');
 };
 
 const getViewUser = async (req: Request, res: Response) => {

@@ -57,7 +57,7 @@
                                             <div style="display: flex; gap: 10px; align-items:center;">
                                                 <!-- use a simple link for GET view (cleaner HTML) -->
                                                 <a href="/handle-view-user/<%= user.id %>" class="btn btn-warning">View</a>
-                                                <form action="/handle-delete-user/<%= user.id %>" method="POST" onsubmit="return confirm('Are you sure to delete this user?');">
+                                                <form action="/admin/delete-user/<%= user.id %>" method="POST" onsubmit="return confirm('Are you sure to delete this user?');">
                                                     <button 
                                                     type="submit"
                                                     class="btn btn-danger">Delete  </button>
