@@ -12,8 +12,6 @@ const webRoutes = (app: Express) => {
     // public create page
     router.get('/create-user', getUserPage);
 
-    router.post('/handle-create-user', postUserPage);
-
     router.post('/handle-delete-user/:id', postDeleteUser);
 
     // view user by id
@@ -27,6 +25,7 @@ const webRoutes = (app: Express) => {
     router.get('/admin/product', getAdminProductPage);
     router.get('/admin/order', getAdminOrderPage);
     router.get('/admin/create-user', getUserPage);
+    router.post('/admin/handle-create-user', postUserPage);
 
     
     app.use('/', router);
