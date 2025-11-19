@@ -6,34 +6,7 @@ const initDatabase = async () => {
     const countUser = await prisma.user.count();
     const countRole = await prisma.role.count();
 
-    if (countUser === 0) {
-        const defaultPassword = await hashPassword('Minhchau3112...');
-        await prisma.user.createMany({
-            data: [
-                {
-                    username: 'hoidanit',
-                    password: defaultPassword,
-                    fullName: 'Hỏi Đáp IT',
-                    address: '123 Tech Street',
-                    phone: '123-456-7890',
-                    accountType: ACCOUNT_TYPE.SYSTEM,
-                    avatar: null,
-                },
-                {
-                    username: 'janedoe',
-                    password: defaultPassword,
-                    fullName: 'Jane Doe',
-                    address: '456 Main Street',
-                    phone: '987-654-3210',
-                    accountType: ACCOUNT_TYPE.SYSTEM,
-                    avatar: null,
-                },
-            ],
-            skipDuplicates: true,
-        });
-    }
 
-    // ensure roles exist as well
     if (countRole === 0) {
         await prisma.role.createMany({
             data: [
@@ -49,6 +22,45 @@ const initDatabase = async () => {
             skipDuplicates: true,
         });
     }
+
+
+    if (countUser === 0) {
+        const defaultPassword = await hashPassword('Minhchau3112...');
+        // name is not declared unique in the schema, use findFirst instead of findUnique
+        const adminRole = await prisma.role.findFirst({
+            where: { name: 'ADMIN' },
+        });
+        const userRole = await prisma.role.findFirst({
+            where: { name: 'USER' },
+        });
+        await prisma.user.createMany({
+            data: [
+                {
+                    username: 'hoidanit',
+                    password: defaultPassword,
+                    fullName: 'Hỏi Đáp IT',
+                    address: '123 Tech Street',
+                    phone: '123-456-7890',
+                    accountType: ACCOUNT_TYPE.SYSTEM,
+                    avatar: null,
+                    roleId: adminRole?.id || 1
+                },
+                {
+                    username: 'janedoe',
+                    password: defaultPassword,
+                    fullName: 'Jane Doe',
+                    address: '456 Main Street',
+                    phone: '987-654-3210',
+                    accountType: ACCOUNT_TYPE.SYSTEM,
+                    avatar: null,
+                    roleId: userRole?.id || 2
+                },
+            ],
+            skipDuplicates: true,
+        });
+    }
+
+
 };
 
 export default initDatabase;

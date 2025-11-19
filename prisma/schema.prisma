@@ -22,6 +22,11 @@ model User {
   phone           String?   @db.VarChar(255)
   accountType     String   @db.VarChar(50)
   avatar          String?   @db.VarChar(255)
+
+  // Nhiều Users thuộc về 1 Role
+  role   Role    @relation(fields: [roleId], references: [id])
+  roleId Int
+
   @@map("users")
 
 }
@@ -30,6 +35,9 @@ model Role {
   id              Int      @id @default(autoincrement())
   name            String   @db.VarChar(100)
   description     String   @db.VarChar(255)
+
+  // 1 Role có nhiều Users
+  users User[]
 
   @@map("roles")
 
