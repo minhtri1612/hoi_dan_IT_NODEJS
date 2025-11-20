@@ -41,18 +41,19 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-8 col-sm-10 mx-auto mt-4">
                                 <h5 class="mb-4">view detail a user:</h5>
-                                <form action="/handle-update-user" method="POST" enctype="multipart/form-data">
+                                <form action="/admin/update-user" method="POST" enctype="multipart/form-data">
                                     <input type="hidden" name="id" value="<%= user.id %>" />
                                     <div class="mb-3">
                                         <label class="form-label">Full name:</label>
                                         <input 
-                                        value="<%= user.fullName %>"
-                                        name = "fullName"
+                                        value="<%= user.id %>"
+                                        name = "id"
                                         type="text" class="form-control" placeholder="your name">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Email:</label>
                                         <input 
+                                        disabled
                                         name = "username"
                                         value="<%= user.username %>"
                                         type="email" class="form-control" placeholder="name@example.com">
@@ -80,7 +81,15 @@
                                         <input name="avatar" class="form-control" type="file" id="avatarFile" accept=".png, .jpg, .jpeg">
                                     </div>
                                     <% const avatarDisplay = user && user.avatar ? 'block' : 'none'; const avatarSrc = user && user.avatar ? '/uploads/avatars/' + user.avatar : ''; %>
-                                    <img style="max-height: 250px; display: <%= avatarDisplay %>;" alt="avatar preview" id="avatarPreview" src="<%= avatarSrc %>" />
+
+                                        <% if (user.avatar) { %>
+                                            <img style="max-height: 250px; display: <%= avatarDisplay %>;" 
+                                            alt="avatar preview" id="avatarPreview" src="/images/<%=user.avatar%>" />
+                                        <% } else { %>
+                                            <img style="max-height: 250px; display: none;" 
+                                            alt="avatar preview" id="avatarPreview"  />
+                                        <% } %>
+
                                     <div class="mb-3">
                                         <label class="form-label">Address:</label>
                                         <textarea 
