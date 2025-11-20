@@ -24,7 +24,49 @@
                             <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
                             <li class="breadcrumb-item active">Products</li>
                         </ol>
-                        <div>table product</div>
+                        
+                        <div style="display:flex; justify-content: space-between; align-items:center;">
+                        <h5>
+                            Table Products:
+                        </h5>
+                        <div>
+                            <a class="btn btn-warning" href="/admin/create-product">Create a product</a>
+                        </div>
+                        </div>
+
+                        <div class="table-responsive mt-4">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Factory</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (typeof products !== 'undefined' && products && products.length > 0) { %>
+                                        <% products.forEach(function(product){ %>
+                                            <tr>
+                                                <td><%= product.id %></td>
+                                                <td><%= product.name %></td>
+                                                <td><%= product.price %></td>
+                                                <td><%= product.factory %></td>
+                                                <td>
+                                                    <a class="btn btn-sm btn-primary" href="/admin/view-product/<%= product.id %>">View</a>
+                                                    <a class="btn btn-sm btn-danger" href="/admin/delete-product/<%= product.id %>">Delete</a>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="5" class="text-center">No products found. Create one using the button above.</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </main>
                 <%- include('../layout/footer') %>
