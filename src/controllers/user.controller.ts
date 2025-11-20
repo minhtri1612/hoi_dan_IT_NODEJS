@@ -1,68 +1,55 @@
 import { Request, Response } from 'express';
 import { getAllUser, handleCreateUser, handleDeleteUser, getUserById, updateUserById, getAllRoles } from '../services/user.service';
-    
-const getHomePage = async (req: Request, res: Response) => {
-    // get users
-    const users = await getAllUser();
-    console.log("check users:",users);
 
-    return res.render("home",{
-        users: users
-    });
+const getHomePage = async (req: Request, res: Response) => {
+    try {
+        // get users and render the client home page
+        const users = await getAllUser();
+        return res.render('client/home/show.ejs', { users: users || [] });
+    } catch (error) {
+        console.error('Error in getHomePage:', error);
+        return res.status(500).send('Internal Server Error');
+    }
 };
 
-const getCreateUserPage = async(req: Request, res: Response) => {
+const getCreateUserPage = async (req: Request, res: Response) => {
     const roles = await getAllRoles();
-    return res.render("admin/user/create.ejs", { roles: roles });
+    return res.render('admin/user/create.ejs', { roles: roles || [] });
 };
 
 const getUserPage = async (req: Request, res: Response) => {
-    // fetch roles to populate the select dropdown (safe if empty)
+    // alias to the create page for public route
     const roles = await getAllRoles();
     return res.render('admin/user/create.ejs', { roles: roles || [] });
 };
 
 const postUserPage = async (req: Request, res: Response) => {
     const { fullName, username, phone, role, address } = req.body;
-
     const file = req.file;
-    //if not file 
     const avatar = file ? file.filename : '';
-
     await handleCreateUser(fullName, username, address, phone, avatar, role);
-    
     return res.redirect('/admin/user');
 };
 
 const postDeleteUser = async (req: Request, res: Response) => {
-
     const id = req.params.id;
-
     await handleDeleteUser(id);
     return res.redirect('/admin/user');
 };
 
 const getViewUser = async (req: Request, res: Response) => {
     const id = req.params.id;
-    // get user by id (service may return rows array)
     const result = await getUserById(id);
-
-    // also fetch roles for the detail view (to show current role or allow change)
     const roles = await getAllRoles();
 
-    // normalize to a single user object
     let userObj: any = result;
     if (Array.isArray(result)) {
-        // some database drivers return [rows], or query may return rows array
-        // if result is an array of rows, pick the first row
         userObj = result[0];
-        // if the driver returns [rows, fields] structure, check for nested array
         if (Array.isArray(userObj) && userObj.length) {
             userObj = userObj[0];
         }
     }
 
-    // pass the user object to the view so template can access user.name, user.email, etc.
     return res.render('admin/user/detail.ejs', {
         id: id,
         user: userObj,
@@ -72,18 +59,10 @@ const getViewUser = async (req: Request, res: Response) => {
 
 const postUpdateUser = async (req: Request, res: Response) => {
     const { id, fullName, username, phone, role, address } = req.body;
-
     const file = req.file;
-    //if not file 
     const avatar = file?.filename ?? undefined;
-    await updateUserById(id, fullName, phone, role, address, avatar );
-
+    await updateUserById(id, fullName, phone, role, address, avatar);
     return res.redirect('/admin/user');
 };
 
-
-
-
-export { getHomePage, getUserPage, postUserPage, postDeleteUser, getViewUser,
-    postUpdateUser, getCreateUserPage
- };
+export { getHomePage, getUserPage, postUserPage, postDeleteUser, getViewUser, postUpdateUser, getCreateUserPage };

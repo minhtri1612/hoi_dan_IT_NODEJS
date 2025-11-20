@@ -23,10 +23,16 @@ app.use(express.static('public'));
 // config routes
 webRoutes(app);
 
-getConnection();
-
-//seeding data
-initDatabase();
+// Initialize database connection and seed data (non-blocking)
+(async () => {
+    try {
+        await getConnection();
+        await initDatabase();
+        console.log('Database initialized successfully');
+    } catch (error) {
+        console.error('Database initialization error:', error);
+    }
+})();
 
 // start server
 app.listen(PORT, () => {
