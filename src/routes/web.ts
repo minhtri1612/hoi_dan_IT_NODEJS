@@ -4,11 +4,13 @@ import { getDashboardPage } from 'controllers/admin/dashboard.controller';
 import { getAdminUserPage } from 'controllers/admin/dashboard.controller';
 import { getAdminProductPage } from 'controllers/admin/dashboard.controller';
 import { getAdminOrderPage } from 'controllers/admin/dashboard.controller';
+import { getProductPage} from 'controllers/client/product.controller';
 import fileUploadMiddleware from 'src/middleware/multer';
 const router = express.Router();
 
 const webRoutes = (app: Express) => {
     router.get('/', getHomePage);
+    router.get("product/:id", getProductPage);
 
     // public create page
     router.get('/create-user', getUserPage);
