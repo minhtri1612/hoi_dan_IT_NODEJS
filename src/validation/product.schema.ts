@@ -2,10 +2,18 @@ import {z} from 'zod';
 
 export const ProductSchema = z.object({
     name: z.string().trim().min(1),
-    price: z.number().min(1),
+    // form inputs come in as strings; coerce to number before validating
+    price: z.preprocess((val) => {
+        if (typeof val === 'string' && val.trim() !== '') return Number(val);
+        return val;
+    }, z.number().min(1)),
     detailDesc: z.string().trim().min(1),
-    shortDesc: z.string().trim().min(1),
-    quantity: z.number().min(1),
+    // shortDesc can be optional in the form; accept an optional trimmed string
+    shortDesc: z.string().trim().optional(),
+    quantity: z.preprocess((val) => {
+        if (typeof val === 'string' && val.trim() !== '') return Number(val);
+        return val;
+    }, z.number().min(1)),
     factory: z.string().optional(),
     target: z.string().optional(),
 
