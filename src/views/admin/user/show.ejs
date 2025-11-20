@@ -7,7 +7,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Manage User</title>
-        <link href="css/styles.css" rel="stylesheet" />
+    <link href="/admin/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
@@ -56,7 +56,7 @@
                                         <td>
                                             <div style="display: flex; gap: 10px; align-items:center;">
                                                 <!-- use a simple link for GET view (cleaner HTML) -->
-                                                <a href="/handle-view-user/<%= user.id %>" class="btn btn-warning">View</a>
+                                                <a href="/admin/view-user/<%= user.id %>" class="btn btn-warning">View</a>
                                                 <form action="/admin/delete-user/<%= user.id %>" method="POST" onsubmit="return confirm('Are you sure to delete this user?');">
                                                     <button 
                                                     type="submit"

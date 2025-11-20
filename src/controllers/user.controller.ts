@@ -47,6 +47,9 @@ const getViewUser = async (req: Request, res: Response) => {
     // get user by id (service may return rows array)
     const result = await getUserById(id);
 
+    // also fetch roles for the detail view (to show current role or allow change)
+    const roles = await getAllRoles();
+
     // normalize to a single user object
     let userObj: any = result;
     if (Array.isArray(result)) {
@@ -60,9 +63,10 @@ const getViewUser = async (req: Request, res: Response) => {
     }
 
     // pass the user object to the view so template can access user.name, user.email, etc.
-    return res.render('view-user', {
+    return res.render('admin/user/detail.ejs', {
         id: id,
         user: userObj,
+        roles: roles || []
     });
 };
 

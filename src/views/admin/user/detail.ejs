@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Create User</title>
+        <title>Detail User</title>
     <link href="/admin/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -40,11 +40,13 @@
                         </ol>
                         <div class="row">
                             <div class="col-lg-6 col-md-8 col-sm-10 mx-auto mt-4">
-                                <h5 class="mb-4">create a user:</h5>
-                                <form action="/admin/handle-create-user" method="POST" enctype="multipart/form-data">
+                                <h5 class="mb-4">view detail a user:</h5>
+                                <form action="/handle-update-user" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="id" value="<%= user.id %>" />
                                     <div class="mb-3">
                                         <label class="form-label">Full name:</label>
                                         <input 
+                                        value="<%= user.fullName %>"
                                         name = "fullName"
                                         type="text" class="form-control" placeholder="your name">
                                     </div>
@@ -52,21 +54,22 @@
                                         <label class="form-label">Email:</label>
                                         <input 
                                         name = "username"
+                                        value="<%= user.username %>"
                                         type="email" class="form-control" placeholder="name@example.com">
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Phone</label>
-                                            <input type="text" class="form-control" name="phone">
+                                            <input
+                                            value="<%= user.phone %>"
+                                            type="text" class="form-control" name="phone">
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label class="form-label">Role</label>
                                             <select class="form-select" name="role">
                                                 <% roles.forEach(role => { %>
-                                                    <option value="<%-role.id %>" >
-                                                        <%- role.name %>
-                                                    </option>
+                                                    <option value="<%= role.id %>" <%= role.id === user.roleId ? 'selected' : '' %>><%= role.name %></option>
                                                 <% }) %>
                                             </select>
                                         </div>
@@ -76,12 +79,13 @@
                                         <label class="form-label">Avatar</label>
                                         <input name="avatar" class="form-control" type="file" id="avatarFile" accept=".png, .jpg, .jpeg">
                                     </div>
-                                    <img style="max-height: 250px; display: none;" alt="avatar preview" id="avatarPreview" />
+                                    <% const avatarDisplay = user && user.avatar ? 'block' : 'none'; const avatarSrc = user && user.avatar ? '/uploads/avatars/' + user.avatar : ''; %>
+                                    <img style="max-height: 250px; display: <%= avatarDisplay %>;" alt="avatar preview" id="avatarPreview" src="<%= avatarSrc %>" />
                                     <div class="mb-3">
                                         <label class="form-label">Address:</label>
                                         <textarea 
                                         name = "address"
-                                        class="form-control"  rows="2"></textarea>
+                                        class="form-control"  rows="2"><%= user.address || '' %></textarea>
                                     </div>
                                     <div class="mb-3">
                                         <button type="submit" class="btn btn-warning">Submit</button>
