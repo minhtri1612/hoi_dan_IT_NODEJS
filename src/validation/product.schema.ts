@@ -1,6 +1,7 @@
 import {z} from 'zod';
 
 export const ProductSchema = z.object({
+    id: z.string().optional(),
     name: z.string().trim().min(1),
     // form inputs come in as strings; coerce to number before validating
     price: z.preprocess((val) => {

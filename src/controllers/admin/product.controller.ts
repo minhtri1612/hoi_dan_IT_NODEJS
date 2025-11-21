@@ -1,32 +1,83 @@
-import { Request, Response} from 'express';
+import { Request, Response } from 'express';
 import { ProductSchema, TProductSchema } from 'src/validation/product.schema';
-import { createProduct } from 'services/admin/product.service';
+import { createProduct, handleDeleteProduct, getProductId, updateProduct, getProductList } from 'services/admin/product.service';
 
+// Render create product page
 const getAdminCreateProductPage = async (req: Request, res: Response) => {
-    return res.render("admin/product/create.ejs");
-}
+    return res.render('admin/product/create.ejs');
+};
 
+// Create product handler
 const postAdminCreateProduct = async (req: Request, res: Response) => {
-    const {name, price, detailDesc, shortDesc, quantity, factory, target} = req.body as TProductSchema;
-
+    const { name, price, detailDesc, shortDesc, quantity, factory, target } = req.body as TProductSchema;
     const validate = ProductSchema.safeParse(req.body);
     if (!validate.success) {
         console.error('Validation error in postAdminCreateProduct:', validate.error);
         return res.status(400).send('Invalid product data');
     }
     const image = req.file ? req.file.filename : '';
-    // service signature: createProduct(name, price, detailDesc, shortDesc, quantity, factory, target, imageUpload)
-    await createProduct(
+    await createProduct(name, +price, detailDesc, shortDesc, +quantity, factory, target, image || '');
+    return res.redirect('/admin/product');
+};
+
+// Delete product
+const postDeleteProduct = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) return res.redirect('/admin/product');
+    await handleDeleteProduct(id);
+    return res.redirect('/admin/product');
+};
+
+// View product details (render detail page)
+const getViewProduct = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (Number.isNaN(id)) return res.redirect('/admin/product');
+    const product = await getProductId(id);
+    if (!product) return res.status(404).send('Product not found');
+
+    const factoryOptions = [
+        { name: 'Apple (MacBook)', value: 'APPLE' },
+        { name: 'Asus', value: 'ASUS' },
+        { name: 'Lenovo', value: 'LENOVO' },
+        { name: 'Dell', value: 'DELL' },
+        { name: 'LG', value: 'LG' },
+        { name: 'Acer', value: 'ACER' },
+    ];
+
+    const targetOptions = [
+        { name: 'Gaming', value: 'GAMING' },
+        { name: 'Sinh viên - Văn phòng', value: 'SINHVIEN-VANPHONG' },
+        { name: 'Thiết kế đồ họa', value: 'THIET-KE-DO-HOA' },
+        { name: 'Mỏng nhẹ', value: 'MONG-NHE' },
+        { name: 'Doanh nhân', value: 'DOANH-NHAN' },
+    ];
+
+    return res.render('admin/product/detail.ejs', {
+        id: id,
+        product: product,
+        factoryOptions,
+        targetOptions,
+    });
+};
+
+// Update product
+const postUpdateProduct = async (req: Request, res: Response) => {
+    const { id, name, price, detailDesc, shortDesc, quantity, factory, target } = req.body as any;
+    const image = req.file ? req.file.filename : null;
+    const numId = Number(id);
+    if (Number.isNaN(numId)) return res.redirect('/admin/product');
+    await updateProduct(
+        numId,
         name,
-        +price,
+        Number(price),
         detailDesc,
-        shortDesc,
-        +quantity,
-        factory,
-        target,
-        image || ''
+        shortDesc || null,
+        Number(quantity),
+        factory || null,
+        target || null,
+        image
     );
     return res.redirect('/admin/product');
-}
+};
 
-export { getAdminCreateProductPage, postAdminCreateProduct };
+export { getAdminCreateProductPage, postAdminCreateProduct, postDeleteProduct, getViewProduct, postUpdateProduct };

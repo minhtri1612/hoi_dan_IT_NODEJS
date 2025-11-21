@@ -28,4 +28,42 @@ const getProductList = async() => {
     return prisma.product.findMany();
 };
 
-export { createProduct, getProductList };
+const handleDeleteProduct = async (id: number) => {
+    await prisma.product.delete({
+        where: { id }
+    });
+};  
+
+const  getProductId = async (id: number) => {
+    return prisma.product.findUnique({
+        where: { id }
+    });
+};
+
+const updateProduct = async (
+    id: number,
+    name: string,
+    price: number,
+    detailDesc: string,
+    shortDesc: string | null,
+    quantity: number,
+    factory: string | null,
+    target: string | null,
+    imageUpload: string | null
+) => {
+    return prisma.product.update({
+        where: { id },
+        data: {
+            name,
+            price,
+            detailDesc,
+            shortDesc,
+            quantity,
+            factory,
+            target,
+            image: imageUpload || undefined,
+        },
+    });
+};
+
+export { createProduct, getProductList, handleDeleteProduct, getProductId, updateProduct };
