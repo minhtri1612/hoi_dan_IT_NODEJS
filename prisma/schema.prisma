@@ -57,7 +57,8 @@ model Product {
   name            String   @db.VarChar(255)
   price           Int   
   image           String?   @db.VarChar(255)
-  detailDesc      String?   @db.VarChar(255)
+  // Allow longer product descriptions than 255 chars
+  detailDesc      String?   @db.Text
   shortDesc       String?   @db.VarChar(255)
   quantity        Int?      @default(0)
   sold            String?   @db.VarChar(255)

@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
 import { getAllUser, handleCreateUser, handleDeleteUser, getUserById, updateUserById, getAllRoles } from '../services/user.service';
+import { getProducts } from 'services/client/item.service';
+
 
 const getHomePage = async (req: Request, res: Response) => {
-    try {
-        // get users and render the client home page
-        const users = await getAllUser();
-        return res.render('client/home/show.ejs', { users: users || [] });
-    } catch (error) {
-        console.error('Error in getHomePage:', error);
-        return res.status(500).send('Internal Server Error');
-    }
+    const products = getProducts();
+    return res.render('client/home/show.ejs', { 
+        products: await products 
+    });
 };
 
 const getCreateUserPage = async (req: Request, res: Response) => {
